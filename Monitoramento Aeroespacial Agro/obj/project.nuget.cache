@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "bwb7XBME/M8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\caioa\\source\\repos\\Monitoramento Aeroespacial Agro\\Monitoramento Aeroespacial Agro\\Monitoramento Aeroespacial Agro.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\caioa\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\10.0.8\\microsoft.extensions.dependencyinjection.10.0.8.nupkg.sha512",
+    "C:\\Users\\caioa\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.8\\microsoft.extensions.dependencyinjection.abstractions.10.0.8.nupkg.sha512"
+  ],
+  "logs": []
+}
