@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Monitoramento_Aeroespacial_Agro.Models;
 
 namespace Monitoramento_Aeroespacial_Agro.Models
 {
-    // Models/SatelliteData.cs (Classe Abstrata)
+    /// <summary>
+    /// Classe abstrata que representa qualquer dado capturado por satélite.
+    /// Não pode ser instanciada diretamente — força a existência de tipos
+    /// concretos (OpticalData, RadarData, etc.) que implementam a análise.
+    /// </summary>
     public abstract class SatelliteData
     {
-        public string SatelliteId { get; set; }
-        public GeoCoordinate Location { get; set; }
-        public DateTime CaptureDate { get; set; } // Uso preciso de DateTime
+        public string SatelliteId { get; protected set; }
+        public GeoCoordinate Location { get; protected set; }
+        public DateTime CaptureDate { get; protected set; }
 
         protected SatelliteData(string id, GeoCoordinate location, DateTime captureDate)
         {
@@ -20,7 +21,11 @@ namespace Monitoramento_Aeroespacial_Agro.Models
             CaptureDate = captureDate;
         }
 
-        // Método polimórfico
+        // Método polimórfico: cada sensor analisa à sua maneira
         public abstract string AnalyzeCropState();
+
+        // Método concreto compartilhado por todas as subclasses
+        public string GetFormattedDate() =>
+            CaptureDate.ToString("dd/MM/yyyy HH:mm:ss");
     }
 }

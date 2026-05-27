@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Monitoramento_Aeroespacial_Agro.Models
 {
-    // Models/GeoCoordinate.cs (Uso de Struct)
+    // Struct: tipo de valor imutável, ideal para coordenadas geográficas simples
     public struct GeoCoordinate
     {
         public double Latitude { get; }
@@ -14,16 +10,19 @@ namespace Monitoramento_Aeroespacial_Agro.Models
 
         public GeoCoordinate(double latitude, double longitude)
         {
+            // Validação dentro do próprio struct garante consistência
+            if (latitude < -90 || latitude > 90)
+                throw new ArgumentOutOfRangeException(nameof(latitude),
+                    $"Latitude inválida: {latitude}. Deve estar entre -90 e 90.");
+
+            if (longitude < -180 || longitude > 180)
+                throw new ArgumentOutOfRangeException(nameof(longitude),
+                    $"Longitude inválida: {longitude}. Deve estar entre -180 e 180.");
+
             Latitude = latitude;
             Longitude = longitude;
         }
-        public override string ToString() => $"[{Latitude:F4}, {Longitude:F4}]";
-    }
 
-    // Exceptions/SpaceDataException.cs (Tratamento de Exceções)
-    public class SpaceDataException : Exception
-    {
-        public SpaceDataException(string message) : base(message) { }
-        public SpaceDataException(string message, Exception inner) : base(message, inner) { }
+        public override string ToString() => $"[Lat: {Latitude:F4}, Lon: {Longitude:F4}]";
     }
 }

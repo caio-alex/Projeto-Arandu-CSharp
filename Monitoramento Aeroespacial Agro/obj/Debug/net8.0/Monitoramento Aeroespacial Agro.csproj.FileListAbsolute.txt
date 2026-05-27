@@ -17,3 +17,4 @@ C:\Users\caioa\source\repos\Monitoramento Aeroespacial Agro\Monitoramento Aeroes
 C:\Users\caioa\source\repos\Monitoramento Aeroespacial Agro\Monitoramento Aeroespacial Agro\obj\Debug\net8.0\Monitoramento Aeroespacial Agro.genruntimeconfig.cache
 C:\Users\caioa\source\repos\Monitoramento Aeroespacial Agro\Monitoramento Aeroespacial Agro\obj\Debug\net8.0\ref\Monitoramento Aeroespacial Agro.dll
 C:\Users\caioa\source\repos\Monitoramento Aeroespacial Agro\Monitoramento Aeroespacial Agro\bin\Debug\net8.0\Data\sat_data.csv
+C:\Users\caioa\source\repos\Monitoramento Aeroespacial Agro\Monitoramento Aeroespacial Agro\obj\Debug\net8.0\Monitoramento Aeroespacial Agro.sourcelink.json

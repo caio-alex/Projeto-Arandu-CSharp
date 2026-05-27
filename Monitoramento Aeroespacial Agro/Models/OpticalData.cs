@@ -1,30 +1,37 @@
 ﻿using System;
+using Monitoramento_Aeroespacial_Agro.Models;
 
 namespace Monitoramento_Aeroespacial_Agro.Models
 {
-    public class OpticalData : SatelliteData
+    /// <summary>
+    /// Parte 1 da classe parcial OpticalData.
+    /// Contém propriedades, construtor e lógica de cálculo dos índices espectrais.
+    /// Uso de 'partial' permite separar propriedades/dados da lógica de análise.
+    /// </summary>
+    public partial class OpticalData : SatelliteData
     {
-        public double RedBand { get; }
-        public double NirBand { get; }
+        // Bandas espectrais brutas capturadas pelo sensor óptico
+        public double RedBand { get; }   // Banda do vermelho (reflectância)
+        public double NirBand { get; }   // Banda do infravermelho próximo
 
-        // Propriedade calculada dinamicamente (Encapsulamento e Regra de Negócio)
-        public double NDVI => (NirBand + RedBand) == 0 ? 0 : (NirBand - RedBand) / (NirBand + RedBand);
+        // NDVI calculado dinamicamente: (NIR - Red) / (NIR + Red)
+        // Encapsula a regra de negócio; evita divisão por zero
+        public double NDVI =>
+            (NirBand + RedBand) == 0 ? 0
+            : (NirBand - RedBand) / (NirBand + RedBand);
 
-        public OpticalData(string id, GeoCoordinate loc, DateTime date, double redBand, double nirBand)
+        // NDWI calculado dinamicamente: (Green - NIR) / (Green + NIR)
+        // Aproximação usando RedBand como proxy de Green quando não há banda verde
+        public double NDWI =>
+            (RedBand + NirBand) == 0 ? 0
+            : (RedBand - NirBand) / (RedBand + NirBand);
+
+        public OpticalData(string id, GeoCoordinate loc, DateTime date,
+                           double redBand, double nirBand)
             : base(id, loc, date)
         {
             RedBand = redBand;
             NirBand = nirBand;
-        }
-
-        public override string AnalyzeCropState()
-        {
-            var ndvi = NDVI; // Chama o cálculo
-
-            if (ndvi < 0.2) return "ALERTA CRÍTICO: Possível solo exposto ou degradação severa.";
-            if (ndvi >= 0.2 && ndvi < 0.5) return "ATENÇÃO: Cultura em estágio inicial ou leve estresse.";
-
-            return "OK: Lavoura saudável com alta biomassa.";
         }
     }
 }
