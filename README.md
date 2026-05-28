@@ -7,7 +7,7 @@
 
 # 🛰️ Arandu — Sistema Aeroespacial do Agronegócio
 
-> **Arandu** (do tupi: *conhecimento*, *sabedoria*) é um sistema de monitoramento de lavouras via satélite desenvolvido em C# (.NET 8), que processa dados espectrais de satélites agrícolas para diagnosticar o estado das culturas brasileiras em tempo real.
+**Arandu** (do tupi: *conhecimento*, *sabedoria*) é um sistema de monitoramento de lavouras via satélite desenvolvido em C# (.NET 8), que processa dados espectrais de satélites agrícolas para diagnosticar o estado das culturas brasileiras em tempo real.
 
 ---
 
