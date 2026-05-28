@@ -182,10 +182,3 @@ O NDVI **não é armazenado no CSV** — é calculado dinamicamente pela proprie
 |--------|--------|-----|
 | `Microsoft.Extensions.DependencyInjection` | 10.0.8 | Container de injeção de dependência |
 
----
-
-## 👤 Autor
-
-Desenvolvido por **Caio Alex** como projeto acadêmico da disciplina de C# — FIAP.
-
-Repositório: [github.com/caio-alex/Projeto-Arandu-Csharp](https://github.com/caio-alex/Projeto-Arandu-Csharp)
