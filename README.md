@@ -96,8 +96,23 @@ Monitoramento Aeroespacial Agro/
 ## Fluxograma
 <img width="1781" height="2260" alt="Projeto Arandu C# (3)" src="https://github.com/user-attachments/assets/5bb6a6cc-6269-45cf-95e4-377b3515b544" />
 
-
 ---
+
+### Evidências
+Tela inicial:
+<img width="714" height="276" alt="image" src="https://github.com/user-attachments/assets/89307903-1d15-42e7-8d5f-b1b314e07d33" />
+
+Tela de relatório geral:
+<img width="1754" height="664" alt="image" src="https://github.com/user-attachments/assets/8bc2d419-552a-4271-abfb-d32e4ba00188" />
+
+Tela de consulta por satélite:
+<img width="1734" height="198" alt="image" src="https://github.com/user-attachments/assets/11eafa22-7497-449a-a045-7fffdb05d2d9" />
+
+Tela de consulta por região:
+<img width="1749" height="256" alt="image" src="https://github.com/user-attachments/assets/1c820425-3407-4eb5-9ab2-04063ccf6eb6" />
+
+Tela de consulta por intervalo de datas:
+
 
 ## 🧩 Conceitos de C# Aplicados
 
