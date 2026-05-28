@@ -26,14 +26,24 @@ namespace Monitoramento_Aeroespacial_Agro.Services
         public IEnumerable<SatelliteData> GetAllData() =>
             _spaceData.AsReadOnly();
 
-        // LINQ com comparação case-insensitive
         public IEnumerable<SatelliteData> GetBySatellite(string satelliteId) =>
             _spaceData.Where(d =>
                 d.SatelliteId.Equals(satelliteId, StringComparison.OrdinalIgnoreCase));
 
-        // Filtro por intervalo de datas — permite análise histórica
+        public IEnumerable<SatelliteData> GetByRegiao(string regiao) =>
+            _spaceData.Where(d =>
+                d.Regiao.Contains(regiao, StringComparison.OrdinalIgnoreCase));
+
         public IEnumerable<SatelliteData> GetByDateRange(DateTime start, DateTime end) =>
             _spaceData.Where(d => d.CaptureDate >= start && d.CaptureDate <= end)
                       .OrderBy(d => d.CaptureDate);
+
+        // Retorna IDs únicos de satélites ordenados — usado para montar o menu
+        public IEnumerable<string> GetSatelitesDisponiveis() =>
+            _spaceData.Select(d => d.SatelliteId).Distinct().OrderBy(x => x);
+
+        // Retorna regiões únicas ordenadas — usado para montar o menu
+        public IEnumerable<string> GetRegioesDisponiveis() =>
+            _spaceData.Select(d => d.Regiao).Distinct().OrderBy(x => x);
     }
 }

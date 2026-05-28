@@ -13,6 +13,9 @@ namespace Monitoramento_Aeroespacial_Agro.Interfaces
         void AddData(SatelliteData data);
         IEnumerable<SatelliteData> GetAllData();
         IEnumerable<SatelliteData> GetBySatellite(string satelliteId);
+        IEnumerable<SatelliteData> GetByRegiao(string regiao);
         IEnumerable<SatelliteData> GetByDateRange(DateTime start, DateTime end);
+        IEnumerable<string> GetSatelitesDisponiveis();
+        IEnumerable<string> GetRegioesDisponiveis();
     }
 }

@@ -8,9 +8,16 @@ namespace Monitoramento_Aeroespacial_Agro.Services
     {
         public void EmitAlert(SatelliteData data, string message)
         {
-            Console.ForegroundColor = message.Contains("CRÍTICO") ? ConsoleColor.Red : ConsoleColor.Yellow;
+            Console.ForegroundColor = ResolveColor(message);
             Console.WriteLine($"[{data.CaptureDate:dd/MM/yyyy HH:mm}] Satélite {data.SatelliteId} em {data.Location}: {message}");
             Console.ResetColor();
+        }
+
+        private static ConsoleColor ResolveColor(string message)
+        {
+            if (message.Contains("CRÍTICO")) return ConsoleColor.Red;
+            if (message.Contains("ATENÇÃO")) return ConsoleColor.Yellow;
+            return ConsoleColor.Green;
         }
     }
 }

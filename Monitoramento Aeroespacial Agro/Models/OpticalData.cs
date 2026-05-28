@@ -1,5 +1,4 @@
 ﻿using System;
-using Monitoramento_Aeroespacial_Agro.Models;
 
 namespace Monitoramento_Aeroespacial_Agro.Models
 {
@@ -26,9 +25,9 @@ namespace Monitoramento_Aeroespacial_Agro.Models
             (RedBand + NirBand) == 0 ? 0
             : (RedBand - NirBand) / (RedBand + NirBand);
 
-        public OpticalData(string id, GeoCoordinate loc, DateTime date,
+        public OpticalData(string id, string regiao, GeoCoordinate loc, DateTime date,
                            double redBand, double nirBand)
-            : base(id, loc, date)
+            : base(id, regiao, loc, date)
         {
             RedBand = redBand;
             NirBand = nirBand;

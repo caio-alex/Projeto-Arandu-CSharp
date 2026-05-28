@@ -9,7 +9,7 @@ namespace Monitoramento_Aeroespacial_Agro.Models
 		// Um método estático puro
 		public static string GetSystemVersion()
 		{
-			return "AgroSpace Analytics v1.0 - Global Solution";
+			return "Arandu - Global Solution";
 		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using Monitoramento_Aeroespacial_Agro.Models;
 
 namespace Monitoramento_Aeroespacial_Agro.Models
 {
@@ -11,12 +10,14 @@ namespace Monitoramento_Aeroespacial_Agro.Models
     public abstract class SatelliteData
     {
         public string SatelliteId { get; protected set; }
+        public string Regiao { get; protected set; }
         public GeoCoordinate Location { get; protected set; }
         public DateTime CaptureDate { get; protected set; }
 
-        protected SatelliteData(string id, GeoCoordinate location, DateTime captureDate)
+        protected SatelliteData(string id, string regiao, GeoCoordinate location, DateTime captureDate)
         {
             SatelliteId = id;
+            Regiao = regiao;
             Location = location;
             CaptureDate = captureDate;
         }
