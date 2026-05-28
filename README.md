@@ -1,3 +1,10 @@
+## Integrantes
+
+- **Caio Alexandre dos Santos** - RM: 558460
+- **Leandro do Nascimento Souza** - RM: 558893
+- **Rafael de Mônaco Maniezo** - RM: 556079
+- **Vinicius Rozas Pannuci de Paula Cont** - RM: 555338
+
 # 🛰️ Arandu — Sistema Aeroespacial do Agronegócio
 
 > **Arandu** (do tupi: *conhecimento*, *sabedoria*) é um sistema de monitoramento de lavouras via satélite desenvolvido em C# (.NET 8), que processa dados espectrais de satélites agrícolas para diagnosticar o estado das culturas brasileiras em tempo real.
