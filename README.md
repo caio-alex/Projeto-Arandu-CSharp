@@ -112,7 +112,9 @@ Tela de consulta por região:
 <img width="1749" height="256" alt="image" src="https://github.com/user-attachments/assets/1c820425-3407-4eb5-9ab2-04063ccf6eb6" />
 
 Tela de consulta por intervalo de datas:
+<img width="1761" height="323" alt="image" src="https://github.com/user-attachments/assets/9e87c85f-ec00-4d0c-af20-cb3d353f1c8f" />
 
+---
 
 ## 🧩 Conceitos de C# Aplicados
 
