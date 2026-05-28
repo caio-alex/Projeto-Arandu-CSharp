@@ -93,6 +93,9 @@ Monitoramento Aeroespacial Agro/
 │
 └── Program.cs                        # Ponto de entrada e menu principal
 ```
+## Fluxograma
+<img width="1781" height="2260" alt="Projeto Arandu C# (3)" src="https://github.com/user-attachments/assets/5bb6a6cc-6269-45cf-95e4-377b3515b544" />
+
 
 ---
 
