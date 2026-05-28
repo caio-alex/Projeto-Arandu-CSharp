@@ -30,18 +30,14 @@ namespace Monitoramento_Aeroespacial_Agro
 
             try
             {
-                Console.WriteLine("  Carregando base de dados espacial...\n");
+                
                 dataLoader.LoadData("Data/sat_data.csv");
                 Console.WriteLine();
             }
             catch (SpaceDataException ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"\n  [ERRO CRÍTICO] Falha no carregamento: {ex.Message}");
-                Console.ResetColor();
-                Console.WriteLine("  O sistema não pode operar sem dados. Pressione qualquer tecla para sair.");
-                Console.ReadKey();
-                return;
+                var sat = ex.SatelliteId != null ? $" [{ex.SatelliteId}]" : "";
+                Console.WriteLine($"[AVISO]{sat} {ex.Message}");
             }
 
             bool running = true;
@@ -312,8 +308,9 @@ namespace Monitoramento_Aeroespacial_Agro
 
         private static void ExibirResumoAlertas(List<SatelliteData> dados)
         {
-            var criticos = dados.Count(d => d.AnalyzeCropState().Contains("CRÍTICO"));
-            var atencao = dados.Count(d => d.AnalyzeCropState().Contains("ATENÇÃO"));
+            var resultados = dados.Select(d => d.AnalyzeCropState()).ToList();
+            var criticos = resultados.Count(r => r.Contains("CRÍTICO"));
+            var atencao = resultados.Count(r => r.Contains("ATENÇÃO"));
             var ok = dados.Count - criticos - atencao;
 
             Console.WriteLine();

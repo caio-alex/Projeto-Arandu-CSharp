@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Monitoramento Aeroespacial Agro")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5914810202aba747d62f70eb8532edb757f9a1ca")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8d35ad8c42ac84718ddc8b087855dabad216eda8")]
 [assembly: System.Reflection.AssemblyProductAttribute("Monitoramento Aeroespacial Agro")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Monitoramento Aeroespacial Agro")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

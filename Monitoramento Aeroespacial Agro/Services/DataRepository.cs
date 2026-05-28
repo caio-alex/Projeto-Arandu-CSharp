@@ -23,8 +23,7 @@ namespace Monitoramento_Aeroespacial_Agro.Services
             _spaceData.Add(data);
         }
 
-        public IEnumerable<SatelliteData> GetAllData() =>
-            _spaceData.AsReadOnly();
+        public IEnumerable<SatelliteData> GetAllData() => _spaceData;
 
         public IEnumerable<SatelliteData> GetBySatellite(string satelliteId) =>
             _spaceData.Where(d =>
