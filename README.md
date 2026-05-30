@@ -83,8 +83,9 @@ Monitoramento Aeroespacial Agro/
 ├── Models/
 │   ├── GeoCoordinate.cs              # Struct de coordenadas geográficas
 │   ├── SatelliteData.cs              # Classe abstrata base
-│   ├── OpticalData.cs                # Dados do sensor óptico (parte 1: propriedades)
-│   └── OpticalData.Analysis.cs       # Dados do sensor óptico (parte 2: análise)
+│   ├── OpticalData.cs                # Partial 1: propriedades e construtor
+│   ├── OpticalData.Analysis.cs       # Partial 2: classificação pelo NDVI
+│   └── OpticalData.Reports.cs        # Partial 3: formatação e relatórios
 │
 ├── Services/
 │   ├── ConsoleAlertService.cs        # Alertas coloridos no console
@@ -93,6 +94,7 @@ Monitoramento Aeroespacial Agro/
 │
 └── Program.cs                        # Ponto de entrada e menu principal
 ```
+
 ## Fluxograma
 <img width="1781" height="2260" alt="Projeto Arandu C# (3)" src="https://github.com/user-attachments/assets/5bb6a6cc-6269-45cf-95e4-377b3515b544" />
 
@@ -122,14 +124,15 @@ Tela de consulta por intervalo de datas:
 |----------|----------------|
 | **Classe abstrata** | `SatelliteData` — não pode ser instanciada diretamente |
 | **Herança e polimorfismo** | `OpticalData` herda de `SatelliteData` e sobrescreve `AnalyzeCropState()` |
-| **Classe `partial`** | `OpticalData` dividida em duas partes: dados e lógica de análise |
-| **Struct** | `GeoCoordinate` — tipo de valor imutável para coordenadas |
+| **Classe estática** | `NdviThresholds` — centraliza as constantes de limiar do NDVI |
+| **Classe `partial`** | `OpticalData` dividida em 3 partes: propriedades, análise e relatórios |
+| **Struct** | `GeoCoordinate` — tipo de valor imutável com validação interna de coordenadas |
 | **Interfaces** | `IAlertService`, `IDataLoader`, `IDataRepository` |
 | **Injeção de dependência** | Container `ServiceCollection` registra e resolve todas as dependências |
-| **LINQ** | Filtros por satélite, região e data no `DataRepository` |
+| **LINQ** | Filtros por satélite, região e data no `DataRepository`; `GroupBy` nas listagens |
 | **Tratamento de exceções** | `SpaceDataException` lançada e capturada em múltiplos pontos críticos |
-| **DateTime preciso** | `TryParseExact`, filtro por intervalo, formatação localizada |
-| **Métodos estáticos privados** | `ClassifyByNdvi()`, `ResolveColor()`, `ResolverEscolha()` |
+| **DateTime preciso** | `TryParseExact`, filtro por intervalo com `AddSeconds(-1)`, formatação localizada |
+| **Métodos estáticos privados** | `ClassifyByNdvi()`, `ResolveColor()`, `ResolverEscolha()`, `ResolverStatusCor()` |
 
 ---
 
@@ -201,4 +204,3 @@ O NDVI **não é armazenado no CSV** — é calculado dinamicamente pela proprie
 | Pacote | Versão | Uso |
 |--------|--------|-----|
 | `Microsoft.Extensions.DependencyInjection` | 10.0.8 | Container de injeção de dependência |
-
