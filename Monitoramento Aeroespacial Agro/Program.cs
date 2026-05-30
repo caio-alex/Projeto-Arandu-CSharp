@@ -7,13 +7,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace Monitoramento_Aeroespacial_Agro
 {
     class Program
     {
         static void Main()
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.InputEncoding = System.Text.Encoding.UTF8;
+
+            // ── Container de Injeção de Dependência ───────────────────────────
+            // Registrar interfaces, não implementações concretas.
+            // Para trocar ConsoleAlertService por EmailAlertService,
+            // basta alterar o registro aqui — sem tocar nas classes consumidoras.
             var services = new ServiceCollection();
             services.AddSingleton<IDataRepository, DataRepository>();
             services.AddSingleton<IAlertService, ConsoleAlertService>();
@@ -28,18 +34,28 @@ namespace Monitoramento_Aeroespacial_Agro
             Console.Clear();
             ExibirCabecalho();
 
+            // ── Carregamento crítico — sistema não pode operar sem dados ──────
             try
             {
-                
+                Console.WriteLine("  Carregando base de dados espacial...\n");
                 dataLoader.LoadData("Data/sat_data.csv");
                 Console.WriteLine();
             }
             catch (SpaceDataException ex)
             {
+                // BUG CORRIGIDO: return garante encerramento imediato.
+                // Um sistema espacial sem dados não pode exibir relatórios
+                // vazios como se estivesse operacional.
+                Console.ForegroundColor = ConsoleColor.Red;
                 var sat = ex.SatelliteId != null ? $" [{ex.SatelliteId}]" : "";
-                Console.WriteLine($"[AVISO]{sat} {ex.Message}");
+                Console.WriteLine($"\n  [ERRO CRÍTICO]{sat} {ex.Message}");
+                Console.ResetColor();
+                Console.WriteLine("  O sistema não pode operar sem dados. Pressione qualquer tecla para sair.");
+                Console.ReadKey();
+                return; // ← encerramento garantido
             }
 
+            // ── Loop principal do menu ────────────────────────────────────────
             bool running = true;
             while (running)
             {
@@ -95,7 +111,6 @@ namespace Monitoramento_Aeroespacial_Agro
             ExibirTituloSecao("FILTRAR TELEMETRIA POR SATÉLITE");
 
             var satelites = repository.GetSatelitesDisponiveis().ToList();
-
             if (!satelites.Any())
             {
                 Console.WriteLine("  Nenhum satélite disponível.\n");
@@ -103,7 +118,6 @@ namespace Monitoramento_Aeroespacial_Agro
                 return;
             }
 
-            // Exibe lista numerada com região e contagem de capturas
             Console.WriteLine("  Satélites disponíveis:\n");
             ExibirListaSatelites(satelites, repository);
 
@@ -112,7 +126,6 @@ namespace Monitoramento_Aeroespacial_Agro
             Console.Clear();
 
             var satId = ResolverEscolha(input, satelites);
-
             if (satId == null)
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -140,7 +153,6 @@ namespace Monitoramento_Aeroespacial_Agro
             ExibirTituloSecao("FILTRAR TELEMETRIA POR REGIÃO / ESTADO");
 
             var regioes = repository.GetRegioesDisponiveis().ToList();
-
             if (!regioes.Any())
             {
                 Console.WriteLine("  Nenhuma região disponível.\n");
@@ -148,7 +160,6 @@ namespace Monitoramento_Aeroespacial_Agro
                 return;
             }
 
-            // Exibe lista numerada com satélite associado e capturas
             Console.WriteLine("  Regiões monitoradas:\n");
             ExibirListaRegioes(regioes, repository);
 
@@ -157,7 +168,6 @@ namespace Monitoramento_Aeroespacial_Agro
             Console.Clear();
 
             var regiao = ResolverEscolha(input, regioes);
-
             if (regiao == null)
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -203,11 +213,12 @@ namespace Monitoramento_Aeroespacial_Agro
                         System.Globalization.DateTimeStyles.None, out DateTime end))
                     throw new FormatException($"Data final inválida: '{endInput}'");
 
+                // AddSeconds(-1): inclui todas as capturas do último dia do intervalo.
+                // Ex: end = 26/05 vira 26/05 23:59:59, capturando registros das 23h.
                 end = end.AddDays(1).AddSeconds(-1);
                 Console.Clear();
 
                 var dados = repository.GetByDateRange(start, end).ToList();
-
                 if (!dados.Any())
                 {
                     Console.WriteLine($"  Nenhum dado entre {start:dd/MM/yyyy} e {end:dd/MM/yyyy}.\n");
@@ -236,6 +247,11 @@ namespace Monitoramento_Aeroespacial_Agro
         {
             var todos = repository.GetAllData().ToList();
 
+            // OTIMIZAÇÃO: GroupBy agrupa uma única vez — O(n) total
+            // Antes: Where por satélite dentro do loop — O(n * m)
+            var agrupado = todos.GroupBy(d => d.SatelliteId)
+                                .ToDictionary(g => g.Key, g => g.ToList());
+
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine($"  {"Nº",-4} {"Satélite",-14} {"Região",-26} {"Capturas",8}  Status");
             Console.WriteLine($"  {new string('─', 62)}");
@@ -244,10 +260,13 @@ namespace Monitoramento_Aeroespacial_Agro
             for (int i = 0; i < satelites.Count; i++)
             {
                 var sat = satelites[i];
-                var capturas = todos.Where(d => d.SatelliteId == sat).ToList();
+                var capturas = agrupado[sat];
                 var regiao = capturas.First().Regiao;
-                var criticos = capturas.Count(d => d.AnalyzeCropState().Contains("CRÍTICO"));
-                var atencao = capturas.Count(d => d.AnalyzeCropState().Contains("ATENÇÃO"));
+
+                // OTIMIZAÇÃO: AnalyzeCropState() chamado uma vez por item
+                var resultados = capturas.Select(d => d.AnalyzeCropState()).ToList();
+                var criticos = resultados.Count(r => r.Contains("CRÍTICO"));
+                var atencao = resultados.Count(r => r.Contains("ATENÇÃO"));
 
                 var (cor, status) = ResolverStatusCor(criticos, atencao);
                 Console.ForegroundColor = cor;
@@ -260,6 +279,10 @@ namespace Monitoramento_Aeroespacial_Agro
         {
             var todos = repository.GetAllData().ToList();
 
+            // OTIMIZAÇÃO: GroupBy agrupa por região uma única vez
+            var agrupado = todos.GroupBy(d => d.Regiao)
+                                .ToDictionary(g => g.Key, g => g.ToList());
+
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine($"  {"Nº",-4} {"Região",-28} {"Satélite",-14} {"Capturas",8}  Status");
             Console.WriteLine($"  {new string('─', 64)}");
@@ -268,10 +291,13 @@ namespace Monitoramento_Aeroespacial_Agro
             for (int i = 0; i < regioes.Count; i++)
             {
                 var reg = regioes[i];
-                var capturas = todos.Where(d => d.Regiao == reg).ToList();
+                var capturas = agrupado[reg];
                 var sat = capturas.First().SatelliteId;
-                var criticos = capturas.Count(d => d.AnalyzeCropState().Contains("CRÍTICO"));
-                var atencao = capturas.Count(d => d.AnalyzeCropState().Contains("ATENÇÃO"));
+
+                // OTIMIZAÇÃO: AnalyzeCropState() chamado uma vez por item
+                var resultados = capturas.Select(d => d.AnalyzeCropState()).ToList();
+                var criticos = resultados.Count(r => r.Contains("CRÍTICO"));
+                var atencao = resultados.Count(r => r.Contains("ATENÇÃO"));
 
                 var (cor, status) = ResolverStatusCor(criticos, atencao);
                 Console.ForegroundColor = cor;
@@ -290,11 +316,9 @@ namespace Monitoramento_Aeroespacial_Agro
             if (int.TryParse(input, out int idx) && idx >= 1 && idx <= opcoes.Count)
                 return opcoes[idx - 1];
 
-            // Tentativa 2: texto digitado diretamente
-            var match = opcoes.FirstOrDefault(o =>
+            // Tentativa 2: texto digitado diretamente (case-insensitive)
+            return opcoes.FirstOrDefault(o =>
                 o.Equals(input, StringComparison.OrdinalIgnoreCase));
-
-            return match;
         }
 
         private static (ConsoleColor cor, string status) ResolverStatusCor(int criticos, int atencao)
@@ -308,6 +332,7 @@ namespace Monitoramento_Aeroespacial_Agro
 
         private static void ExibirResumoAlertas(List<SatelliteData> dados)
         {
+            // OTIMIZAÇÃO: AnalyzeCropState() chamado uma vez por item (cache em lista)
             var resultados = dados.Select(d => d.AnalyzeCropState()).ToList();
             var criticos = resultados.Count(r => r.Contains("CRÍTICO"));
             var atencao = resultados.Count(r => r.Contains("ATENÇÃO"));
